@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    #BurkiSchererAG\BSNewsSubmit\EventListener\ModuleCallback: ~
+
+    BurkiSchererAG\BSNewsSubmit\:
+        resource: ../../../src/{Controller,EventListener}
