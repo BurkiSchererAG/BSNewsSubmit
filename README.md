@@ -1,7 +1,7 @@
 Basic News Submission
 ===================
 
-With this bundle you can create a News from frontend. You make a module type `News Submission` and select *editable* fields.
+With this bundle you can create a News from frontend. You make a module of type `News Submission` and select *editable* fields.
 
 By default some fields from `tl_news` are already made editiable, but you can add more fields as shown below.
 
@@ -22,13 +22,18 @@ foreach (array('headline', 'teaser', 'location', 'url', 'singleSRC', 'enclosure'
 
 By submiting an news you can send a notification of type `News Submit`.
 
-All news fields from the perticlur news (`tl_news`) are avaliable as notification simple token
+All news fields from the particular news (`tl_news`) are avaliable as notification simple token
 ```php
 ##news_*##
 ```
 Also for file upload, then link to the file is available as.
 ```php
 ##news_{uploadFieldName}_path##
+```
+For example: 
+```php
+##news_teaser_image_path##
+##news_enclosure_path##
 ```
 
 All news fields from the Module `News Submission` are also available inside notification.
@@ -42,7 +47,7 @@ If there is a logged in frontend user, then all member fields are also available
 ```php
 ##member_*##
 ```
-If there is a user is guest user then flowing infromation available inside notification.
+If user is a guest user (not logged in member) then following informations are also available inside notification.
 ```php
 ##GuestCompany##, 
 ##GuestTitle##, 

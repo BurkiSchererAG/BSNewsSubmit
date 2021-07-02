@@ -13,6 +13,9 @@ $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']  = a
     'email_text' => [
         'newssubmit_mod_*', 'news_*', 'member_*',
         'GuestCompany', 'GuestTitle', 'GuestFirstname', 'GuestLastname', 'GuestEmail'
+    ],
+    'file_name' => [
+        'newssubmit_mod_*', 'news_*', 'member_*'
     ]
 );
 

@@ -50,6 +50,19 @@ class ModuleNewsSubmit extends Module
             $objTemplate->link = $this->name;
             $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
+            /* 
+                If there is file upload in editable fields,
+                make sure upload destination is set
+            */
+            $editableFields = StringUtil::deserialize($this->bsNewsSubmitEditable);
+            if (
+                sizeof(array_intersect(['singleSRC', 'enclosure'], $editableFields)) > 0 &&
+                !$this->bsUploadDir
+            ) {
+                $objTemplate->link .= ' <span style="color: red">(Please set upload folder)</span>';
+            }
+            /* end upload folder check */
+
             return $objTemplate->parse();
         }
 
