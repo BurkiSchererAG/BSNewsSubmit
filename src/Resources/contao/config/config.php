@@ -9,7 +9,7 @@ $GLOBALS['FE_MOD']['bs']['bs_NewsSubmit'] = 'BurkiSchererAG\ModuleNewsSubmit';
 /**
  * Notification Center Notification Types
  */
-$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']  = array(
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']  = [
     'email_text' => [
         'newssubmit_mod_*', 'news_*', 'member_*',
         'GuestCompany', 'GuestTitle', 'GuestFirstname', 'GuestLastname', 'GuestEmail'
@@ -17,7 +17,7 @@ $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']  = a
     'file_name' => [
         'newssubmit_mod_*', 'news_*', 'member_*'
     ]
-);
+];
 
 
 /* make same variables from email_text above, avialable to email_subject, email_html and file_content */

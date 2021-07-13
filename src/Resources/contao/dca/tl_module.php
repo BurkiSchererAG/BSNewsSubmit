@@ -6,12 +6,12 @@ use Contao\Controller;
 
 // Fields
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['bsNewsSubmitEditable'] = array(
+$GLOBALS['TL_DCA']['tl_module']['fields']['bsNewsSubmitEditable'] = [
     'label'                   => &$GLOBALS['TL_LANG']['tl_module']['bsNewsSubmitEditable'],
     'exclude'                 => true,
     'inputType'               => 'checkboxWizard',
     'options_callback'        => static function () {
-        $return = array();
+        $return = [];
 
         System::loadLanguageFile('tl_news');
         Controller::loadDataContainer('tl_news');
@@ -28,27 +28,27 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['bsNewsSubmitEditable'] = array(
 
         return $return;
     },
-    'eval'                    => array('multiple' => true, 'submitOnChange' => true),
+    'eval'                    => ['multiple' => true, 'submitOnChange' => true],
     'sql'                     => "blob NULL"
-);
+];
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['bsNewsSubmitArchive'] = array(
+$GLOBALS['TL_DCA']['tl_module']['fields']['bsNewsSubmitArchive'] = [
     'label'                   => &$GLOBALS['TL_LANG']['tl_module']['bsNewsSubmitArchive'],
     'exclude'                 => true,
     'inputType'               => 'select',
     'foreignKey'              => 'tl_news_archive.title',
-    'eval'                    => array('chosen' => true),
+    'eval'                    => ['chosen' => true],
     'sql'                     => "int(10) unsigned NOT NULL default '0'"
-);
+];
 
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['bsUploadDir'] = array(
+$GLOBALS['TL_DCA']['tl_module']['fields']['bsUploadDir'] = [
     'label'                   => &$GLOBALS['TL_LANG']['tl_module']['bsUploadDir'],
     'exclude'                 => true,
     'inputType'               => 'fileTree',
-    'eval'                    => array('fieldType' => 'radio', 'mandatory' => true, 'tl_class' => 'clr'),
+    'eval'                    => ['fieldType' => 'radio', 'mandatory' => true, 'tl_class' => 'clr'],
     'sql'                     => "binary(16) NULL"
-);
+];
 
 
 /**
@@ -63,4 +63,4 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['bs_NewsSubmit'] = '{title_legend},n
 /**
  * Notification choices
  */
-$GLOBALS['TL_DCA']['tl_module']['fields']['nc_notification']['eval']['ncNotificationChoices']['bs_newssubmit'] = array('bs_newssubmit');
+$GLOBALS['TL_DCA']['tl_module']['fields']['nc_notification']['eval']['ncNotificationChoices']['bs_newssubmit'] = ['bs_newssubmit'];

@@ -2,8 +2,6 @@
 
 namespace BurkiSchererAG;
 
-use Patchwork\Utf8;
-use Contao\BackendTemplate;
 use Contao\Date;
 use Contao\Dbafs;
 use Contao\Input;
@@ -11,13 +9,17 @@ use Contao\Folder;
 use Contao\Module;
 use Contao\System;
 use Contao\Message;
+use Patchwork\Utf8;
 use Contao\Database;
+use Contao\NewsModel;
 use Contao\Controller;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Haste\Util\Format;
 use Contao\MemberModel;
 use Contao\FrontendUser;
+use Contao\Model\Registry;
+use Contao\BackendTemplate;
 use Contao\CoreBundle\Exception\ResponseException;
 
 /**
@@ -32,6 +34,7 @@ class ModuleNewsSubmit extends Module
      */
     protected $strTemplate = 'mod_bs_submitnews';
     protected $strTable = 'tl_news';
+    private $objNews;
 
     /**
      * Return a wildcard in the back end
@@ -50,7 +53,7 @@ class ModuleNewsSubmit extends Module
             $objTemplate->link = $this->name;
             $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-            /* 
+            /*
                 If there is file upload in editable fields,
                 make sure upload destination is set
             */
@@ -101,18 +104,18 @@ class ModuleNewsSubmit extends Module
         //This is set early, because its needed in function to create upload folder
         $this->Template->formId  =  $strFormId;
 
-        $objNews = new \Contao\NewsModel();
-
+        $this->objNews = new NewsModel();
+        
         // Captcha, Check Captcha early, as creating upload folder depend on errors
         // but add to Widget/FFL at the end
         if (!$this->disableCaptcha) {
-            $arrCaptcha = array(
+            $arrCaptcha = [
                 'id' => 'newssubmit',
                 'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
                 'type' => 'captcha',
                 'mandatory' => true,
                 'required' => true
-            );
+            ];
 
             /** @var FormCaptcha $strClass */
             $strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
@@ -150,8 +153,10 @@ class ModuleNewsSubmit extends Module
             if (($arrData['inputType'] ?? null) == 'fileTree') {
                 $arrData['inputType'] = 'upload';
 
-                if ($arrData['eval']['storeFile']) {
-
+                //Create custom folder only when form is submitted and doNotSubmit flag is false
+                //to avoid increasing news id. It is better if the upload field is kept at the end of form,
+                //so that all other fields are validated before creating the folder.
+                if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId && $arrData['eval']['storeFile']) {
                     //Set custom upload folder
                     $arrData['eval']['uploadFolder'] = $this->getUploadFolderUuid();
 
@@ -190,8 +195,8 @@ class ModuleNewsSubmit extends Module
                 $hasUpload = true;
             }
 
-            // Validate the form data
-            if (Input::post('FORM_SUBMIT') == $strFormId) {
+            // Validate the form data, if doNotSubmit flag is not set
+            if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId) {
                 $objWidget->validate();
 
                 $varValue = $objWidget->value;
@@ -199,7 +204,7 @@ class ModuleNewsSubmit extends Module
                 $rgxp = $arrData['eval']['rgxp'];
 
                 // Convert date formats into timestamps (check the eval setting first -> #3063)
-                if ($varValue !== null && $varValue !== '' && \in_array($rgxp, array('date', 'time', 'datim'))) {
+                if ($varValue !== null && $varValue !== '' && \in_array($rgxp, ['date', 'time', 'datim'])) {
                     try {
                         $objDate = new Date($varValue, Date::getFormatFromRgxp($rgxp));
                         $varValue = $objDate->tstamp;
@@ -249,7 +254,7 @@ class ModuleNewsSubmit extends Module
                     }
 
                     // Set the new value
-                    $objNews->$field = $varValue;
+                    $this->objNews->$field = $varValue;
                 }
             }
 
@@ -270,7 +275,7 @@ class ModuleNewsSubmit extends Module
 
         //Add news creator member for logged in
         if (FE_USER_LOGGED_IN && $objUser->id) {
-            $objNews->member = $objUser->id;
+            $this->objNews->member = $objUser->id;
         }
 
         $this->Template->hasError = $doNotSubmit;
@@ -283,7 +288,7 @@ class ModuleNewsSubmit extends Module
         if (Input::post('FORM_SUBMIT') == $strFormId && !$doNotSubmit) {
 
             //Create News
-            $this->createNews($objNews);
+            $this->createNews();
 
             // Check whether there is a jumpTo page
             if (($objJumpTo = $this->objModel->getRelated('jumpTo')) !== null) {
@@ -299,74 +304,78 @@ class ModuleNewsSubmit extends Module
     /**
      * create a new News
      */
-    public function createNews($objNews)
+    public function createNews()
     {
-
-        $objNews->tstamp  = time();
-        $objNews->date = time();
-        $objNews->time = time();
+        $this->objNews->tstamp  = time();
+        $this->objNews->date = time();
+        $this->objNews->time = time();
 
         $arrAttachtment = []; //Add file path to notifcation later on
         $contentElement = [];
-        $slug_seed = $objNews->headline ?: 'newsurl';
+        $slug_seed = $this->objNews->headline ?: 'newsurl';
 
         //news Archive
-        $objNews->pid     = $this->bsNewsSubmitArchive;
-        $newsArchive = $objNews->getRelated('pid')->row();
-        $objNews->author = $newsArchive['newsOwner'];
+        $this->objNews->pid     = $this->bsNewsSubmitArchive;
+        $newsArchive = $this->objNews->getRelated('pid')->row();
+        $this->objNews->author = $newsArchive['newsOwner'];
 
         //Generate alias
         $slugOptions = $newsArchive['jumpTo'];
         $aliasExists = function (string $alias): bool {
             return $this->Database->prepare("SELECT id FROM $this->strTable WHERE alias=?")->execute($alias)->numRows > 0;
         };
-        $objNews->alias = System::getContainer()->get('contao.slug')->generate($slug_seed, $slugOptions, $aliasExists);
+        $this->objNews->alias = System::getContainer()->get('contao.slug')->generate($slug_seed, $slugOptions, $aliasExists);
 
 
         //If there is an url value then set link target
-        if ($objNews->url) {
-            //Add source type    
-            $objNews->source = 'external';
+        if ($this->objNews->url) {
+            //Add source type
+            $this->objNews->source = 'external';
             //Add target_blank
-            $objNews->target = 1;
+            $this->objNews->target = 1;
         }
 
-
-        //If there were uploads then add the field to $objNews
+        //If there were uploads then add the field to $this->objNews
         //Also set the Template->enctype, before calling fn createNews
-        if ($this->Template->getData()['enctype'] == 'multipart/form-data') {
+        if ($this->Template->getData()['enctype'] == 'multipart/form-data' && isset($_SESSION['FILES'])) {
             foreach (\array_keys($_SESSION['FILES']) as $fieldName) {
                 //enclosure; check also session file key is in the editable list
                 if (\in_array($fieldName, $this->editable) && $fieldName == 'enclosure') {
-                    $objNews->addEnclosure = 1;
-                    $objNews->{$fieldName} = $_SESSION['FILES'][$fieldName]['uuid'];
+                    $this->objNews->addEnclosure = 1;
+                    $this->objNews->{$fieldName} = $_SESSION['FILES'][$fieldName]['uuid'];
                     $arrAttachtment[$fieldName] = str_replace([TL_ROOT, ' '], ['{{env::url}}', '%20'], $_SESSION['FILES'][$fieldName]['tmp_name']);
                 }
 
                 //Teaser singleSRC
                 if (\in_array($fieldName, $this->editable) && $fieldName == 'singleSRC') {
-                    $objNews->addImage = 1;
+                    $this->objNews->addImage = 1;
                     $imgFileModel = FilesModel::findByUuid($_SESSION['FILES'][$fieldName]['uuid']);
-                    $objNews->{$fieldName} = $imgFileModel->uuid;
+                    $this->objNews->{$fieldName} = $imgFileModel->uuid;
                     $arrAttachtment['teaser_image'] = str_replace([TL_ROOT, ' '], ['{{env::url}}', '%20'], $_SESSION['FILES'][$fieldName]['tmp_name']);
                 }
             }
         }
 
         //Store if there is any detail text to create content element
-        $contentElement = array_filter($objNews->row(), function ($key) {
+        $contentElement = array_filter($this->objNews->row(), function ($key) {
             return strpos($key, 'detailCE') === 0;
         }, ARRAY_FILTER_USE_KEY);
 
-        $objNewNews = $objNews->save();
+        // dd($contentElement);
+        $objNewNews = $this->objNews->save();
 
         if ($objNewNews !== null) {
             //Create content elements if any
             if (count($contentElement)) {
+                
+                //make into numeric array
+                $contentElement = array_values($contentElement);
+
                 foreach ($contentElement as $index => $element) {
                     if (strlen(trim($element)) < 1) {
                         continue;
                     }
+
                     $ce_text['pid'] = $objNewNews->id;
                     $ce_text['ptable'] = $this->strTable;
                     $ce_text['type'] = 'text';
@@ -465,9 +474,12 @@ class ModuleNewsSubmit extends Module
     {
         $uuid = $this->bsUploadDir;
 
+        $this->objNews->tstamp  = time();
+        $this->news = $this->objNews->save();
+        // Registry::getInstance()->register($this->objNews);
+
         // Create new folder only when the form is sumbitted without error
         if ($GLOBALS['BS_NewsSubmit']['BS_CUSTOM_FOLDER'] && Input::post('FORM_SUBMIT') == $this->Template->formId && !$this->Template->hasError) {
-
             if ($this->bsUploadDir) {
                 $basePath = FilesModel::findById($uuid)->row()['path'];
             } else {
@@ -481,7 +493,7 @@ class ModuleNewsSubmit extends Module
             }
 
             //You can add any logic by defining callback function $GLOBALS['BS_NewsSubmit']['BS_CUSTOM_FOLDER_FUNCTION']
-            $newFolder = date('Ymd-Hi') . '-' . $this->id;
+            $newFolder = date('Ymd-Hi') . '-' . $this->news->id;
 
             $objFolder = new Folder($basePath . '/' . $newFolder);
 
