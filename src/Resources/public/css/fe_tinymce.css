@@ -1,0 +1,27 @@
+
+body#tinymce { color:#666966; background:none !important; background-color:#ffffff !important; }
+.text-nobreak {white-space: nowrap;}
+.text-capital {text-transform : uppercase;}
+.text-big {font-size : 1.25rem;}
+.text-full{text-align: justify;}
+.text-underline{border-bottom: 1px solid;}
+.text-small{ font-size : 0.75rem;}
+.text-red{ color: #990000;}
+
+
+/* TinyMCE STYLES
+-----------------*/
+#tinymce p, #tinymce h1, #tinymce h2, #tinymce h3, #tinymce h4 {	margin : 10px 3px 5px 1px;padding-left : 1px;}
+#tinymce p {line-height: 1.6;	border-left : 5px solid #CCC;border-bottom : 1px solid #EEE;border-top : 3px solid #FFF; background: transparent url(../images/tinymce/tag-visual.gif) 850px 0 no-repeat; padding-right : 30px;}
+#tinymce h1, #tinymce h2, #tinymce h3, #tinymce h4 {border-left : 5px solid #CCDFFF;	border-bottom : 1px solid #DEEEFF;border-top : 3px solid #FFF; background: transparent url(../images/tinymce/tag-visual.gif) -40px 0 no-repeat; padding-right : 30px;}
+#tinymce  ul, #tinymce  ol { min-height : 20px;  border-left : 5px solid #F1A6FD; border-top : 3px solid #FFF;}
+#tinymce b, #tinymce p b { min-width : 20px; min-height : 20px; border-left : 5px solid #fefefe;}
+#tinymce  li { padding : 2px 0; }
+#tinymce sub, #tinymce sup {background-color :#d3f7cf}
+#tinymce  ul li span {	background-color :#93FF9A;	margin: 0 3px; line-height : 16px;}
+#tinymce address { border-left : 5px solid #2C6;border-bottom : 1px solid #2C6;border-top : 3px solid #FFF;}
+
+#tinymce  {
+	font-size: 1rem;
+}
+

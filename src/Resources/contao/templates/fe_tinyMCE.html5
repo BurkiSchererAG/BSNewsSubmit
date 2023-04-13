@@ -1,0 +1,87 @@
+<?php
+
+namespace Contao;
+//For Contao > 4.13.0
+$toolbar = "link unlink  | forecolor styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | undo redo | removeformat code";
+
+if ($GLOBALS['TL_CONFIG']['useRTE']) :
+
+    $tinyMceLanguage = Backend::getTinyMceLanguage();
+    $base = Environment::get('base');
+    $selector = '.textarea.tinyMCE';
+    $scriptSrc = $this->asset('js/tinymce.min.js', 'contao-components/tinymce4');
+
+    $tinyMCEscript = <<<TINYMCE_SCRIPT
+       <script src="$scriptSrc"></script>
+       <script>
+        window.tinymce && tinymce.init({
+            min_height: 336,
+            selector: '$selector',
+            language: '$tinyMceLanguage',
+            element_format: 'html',
+            document_base_url: '$base',
+            entities: '160,nbsp,60,lt,62,gt,173,shy',
+            menubar:false,
+            branding: false,
+            setup: function(editor) {
+                editor.getElement().removeAttribute('required');
+            },
+            init_instance_callback: function(editor) {
+                if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
+                    editor.editorManager.get(editor.id).focus();
+                }
+            },
+            plugins: ' autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks',
+            browser_spellcheck: true,
+            tabfocus_elements: ':prev,:next',
+            importcss_append: true,
+            importcss_groups: [{'title': 'Text Styles'}],
+            extended_valid_elements: 'q[cite|class|title]',
+            toolbar: '$toolbar',
+            style_formats: [{
+                    title: "Headings",
+                    items: [
+                        {
+                            title: 'Heading 2',
+                            block: 'h2'
+                        },
+                        {
+                            title: 'Heading 3',
+                            block: 'h3'
+                        },
+                        {
+                            title: 'Heading 4',
+                            block: 'h4'
+                        }
+                    ]
+                },
+
+                {
+                    title: "Blocks",
+                    items: [{
+                            title: 'Div',
+                            block: 'div'
+                        },
+                        {
+                            title: 'Blockquote',
+                            block: 'blockquote'
+                        },
+                        {
+                            title: 'Paragraph',
+                            block: 'p'
+                        }
+                    ]
+                }
+            ],
+            browser_spellcheck: true,
+            tabfocus_elements: ':prev,:next',
+            importcss_append: true
+        });        
+    </script>    
+TINYMCE_SCRIPT;
+
+    //array key tinyMCE is put here to avoid multiple insertion of script on page
+    $GLOBALS['TL_HEAD']['tinyMCE'] = $tinyMCEscript;
+
+?>
+<?php endif; ?>

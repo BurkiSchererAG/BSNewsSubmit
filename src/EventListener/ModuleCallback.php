@@ -33,7 +33,7 @@ class ModuleCallback
         $showFilePath = false;
         $palettes = &$GLOBALS['TL_DCA']['tl_module']['palettes'];
 
-        $bsNewsSubmitEditable = StringUtil::deserialize($objModule->bsNewsSubmitEditable);
+        $bsNewsSubmitEditable = StringUtil::deserialize($objModule->bsNewsSubmitEditable) ?? [];
 
         foreach ($bsNewsSubmitEditable as $field) {
             if ($GLOBALS['TL_DCA']['tl_news']['fields'][$field]['inputType'] == 'fileTree') {

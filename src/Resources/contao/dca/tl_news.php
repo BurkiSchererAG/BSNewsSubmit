@@ -47,6 +47,13 @@ if (TL_MODE == 'FE') {
 /**
  * Custom Fields
  */
+$GLOBALS['TL_DCA']['tl_news']['fields']['uploadDir'] = [
+    'exclude'                 => true,
+    'inputType'               => 'fileTree',
+    'eval'                    => array('fieldType' => 'radio', 'tl_class' => 'clr'),
+    'sql'                     => "binary(16) NULL"
+];
+
 $GLOBALS['TL_DCA']['tl_news']['fields']['email'] = [
     'label'                   => &$GLOBALS['TL_LANG']['tl_news']['email'],
     'exclude'                 => true,
@@ -56,6 +63,17 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['email'] = [
     'inputType'               => 'text',
     'eval'                    => ['maxlength' => 255, 'rgxp' => 'email', 'decodeEntities' => true, 'feEditable' => true, 'feViewable' => true, 'tl_class' => 'w50'],
     'sql'                     => "varchar(255) NOT NULL default ''"
+];
+
+$GLOBALS['TL_DCA']['tl_news']['fields']['phone'] = [
+    'label'                   => &$GLOBALS['TL_LANG']['tl_news']['phone'],
+    'exclude'                 => true,
+    'search'                  => true,
+    'filter'                  => true,
+    'sorting'                 => true,
+    'inputType'               => 'text',
+    'eval'                    => ['maxlength' => 255, 'rgxp' => 'email', 'decodeEntities' => true, 'feEditable' => true, 'feViewable' => true, 'tl_class' => 'w50'],
+    'sql'                     => "varchar(64) NOT NULL default ''"
 ];
 
 $GLOBALS['TL_DCA']['tl_news']['fields']['company'] = [
@@ -133,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['member'] = [
 
 //This doesn't have real DB field. Its used add details input textarea
 
-foreach (range(1, $GLOBALS['BS_NewsSubmit']['DETAIL_CE_TEXT_FIELD']) as $key) {
+foreach (range(1, $GLOBALS['bs_NewsSubmit']['DETAIL_CE_TEXT_FIELD'] ?? 1) as $key) {
     $GLOBALS['TL_DCA']['tl_news']['fields']['detailCE_' . $key] = [
         'label'                   => &$GLOBALS['TL_LANG']['tl_news']['detailCE' . $key],
         'exclude'                 => true,
@@ -142,23 +160,32 @@ foreach (range(1, $GLOBALS['BS_NewsSubmit']['DETAIL_CE_TEXT_FIELD']) as $key) {
     ];
 }
 
+
+$GLOBALS['TL_DCA']['tl_news']['fields']['image_gallery'] = [
+    'label'                   => &$GLOBALS['TL_LANG']['tl_news']['image_gallery'],
+    'exclude'                 => true,
+    'inputType'               => 'multiSRC',
+    'eval'                    => ['feEditable' => true],
+];
+
+
 /**
  * Show or hide personal fields depending upon if user is logged in or guest.
  **/
 if (TL_MODE == 'FE') {
     $objFrontendUser = FrontendUser::getInstance();
 
-    $arrGuestFields = ['email', 'firstname', 'lastname', 'designation', 'company'];
+    $arrGuestFields = ['email', 'firstname', 'lastname', 'designation', 'phone', 'company'];
 
-    if ($objFrontendUser->email === null) {
-        foreach ($arrGuestFields as $key) {
-            $GLOBALS['TL_DCA']['tl_news']['fields'][$key]['eval']['mandatory'] = true;
-        }
-    } else {
-        foreach ($arrGuestFields as $key) {
-            $GLOBALS['TL_DCA']['tl_news']['fields'][$key]['eval']['feEditable'] = false;
-        }
-    }
+    // if ($objFrontendUser->email === null) {
+    //     foreach ($arrGuestFields as $key) {
+    //         $GLOBALS['TL_DCA']['tl_news']['fields'][$key]['eval']['mandatory'] = true;
+    //     }
+    // } else {
+    //     foreach ($arrGuestFields as $key) {
+    //         $GLOBALS['TL_DCA']['tl_news']['fields'][$key]['eval']['feEditable'] = false;
+    //     }
+    // }
 }
 
 /**
@@ -166,7 +193,7 @@ if (TL_MODE == 'FE') {
  */
 $pm = PaletteManipulator::create()
     ->addLegend('creator_legend', 'title_legend', PaletteManipulator::POSITION_AFTER)
-    ->addField('member, email, firstname, lastname, designation, company', 'creator_legend', PaletteManipulator::POSITION_APPEND)
+    ->addField('member, email, firstname, lastname, designation, company, phone', 'creator_legend', PaletteManipulator::POSITION_APPEND)
     ->applyToPalette('default', 'tl_news')
     ->applyToPalette('internal', 'tl_news')
     ->applyToPalette('article', 'tl_news')

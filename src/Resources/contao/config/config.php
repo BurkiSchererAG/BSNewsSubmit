@@ -3,13 +3,13 @@
 /**
  * Front end modules
  */
-$GLOBALS['FE_MOD']['bs']['bs_NewsSubmit'] = 'BurkiSchererAG\ModuleNewsSubmit';
+// $GLOBALS['FE_MOD']['bs']['bs_NewsSubmit'] = 'BurkiSchererAG\ModuleNewsSubmit';
 
 
 /**
  * Notification Center Notification Types
  */
-$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']  = [
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_NewsSubmit']  = [
     'email_text' => [
         'newssubmit_mod_*', 'news_*', 'member_*',
         'GuestCompany', 'GuestTitle', 'GuestFirstname', 'GuestLastname', 'GuestEmail'
@@ -21,12 +21,12 @@ $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']  = [
 
 
 /* make same variables from email_text above, avialable to email_subject, email_html and file_content */
-$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']['email_subject'] =
-    &$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']['email_text'];
-$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']['email_html'] =
-    &$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']['email_text'];
-$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']['file_content'] =
-    &$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']['email_text'];
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_NewsSubmit']['email_subject'] =
+    &$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_NewsSubmit']['email_text'];
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_NewsSubmit']['email_html'] =
+    &$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_NewsSubmit']['email_text'];
+$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_NewsSubmit']['file_content'] =
+    &$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_NewsSubmit']['email_text'];
 
 
 
@@ -35,20 +35,26 @@ $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['bs']['bs_newssubmit']['fil
  */
 //If there are uploads then create a destination subfolder automatically inside the base folder.
 //Subfolder name is YYYYMMDD-HHMM-NewsID. Set to false if you like to have all files inside the base folder
-$GLOBALS['BS_NewsSubmit']['BS_CUSTOM_FOLDER'] = true;
+$GLOBALS['bs_NewsSubmit']['BS_CUSTOM_FOLDER'] = true;
 
 //If you prefer to have another naming for the subfolder, then define a clouser function like example give below
-$GLOBALS['BS_NewsSubmit']['BS_CUSTOM_FOLDER_FUNCTION'] = null;
+$GLOBALS['bs_NewsSubmit']['BS_CUSTOM_FOLDER_FUNCTION'] = null;
 
 //Adds detail textarea
-$GLOBALS['BS_NewsSubmit']['DETAIL_CE_TEXT_FIELD'] = 1;
+$GLOBALS['bs_NewsSubmit']['DETAIL_CE_TEXT_FIELD'] = 1;
 
+//maxAllowedFileCount
+$GLOBALS['bs_NewsSubmit']['maxAllowedFileCount'] = 10;
+
+
+
+$GLOBALS['TL_CSS']['newsFee'] =  '/bundles/bsnewssubmit/css/general.css';
 
 /**
  * Example folder name callback
  */
  /*
-$GLOBALS['BS_NewsSubmit']['BS_CUSTOM_FOLDER_FUNCTION'] =  function ($obj, $basePath) {
+$GLOBALS['bs_NewsSubmit']['BS_CUSTOM_FOLDER_FUNCTION'] =  function ($obj, $basePath) {
 
     //You can add any logic here
     $newFolder = rand(0, 100);

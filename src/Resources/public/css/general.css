@@ -1,0 +1,68 @@
+/* general css */
+.mod_bs_NewsSubmit {
+    margin: 1rem auto;
+    max-width: 1000px;
+}
+
+.mod_bs_NewsSubmit label {
+    color: #229;
+}
+
+.mod_bs_NewsSubmit .widget {
+    margin-bottom: 1rem;
+}
+
+.mod_bs_NewsSubmit input.text {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    padding: 2px 5px;
+}
+
+.mod_bs_NewsSubmit .tl_confirm {
+    background: greenyellow;
+    color: blue;
+}
+
+.mod_bs_NewsSubmit button {
+    float: right;
+}
+
+.mod_bs_NewsSubmit .widget-upload {
+    background: #eee;
+    padding: 1rem 1rem 0.5rem;
+    min-height: 30px;
+    overflow: hidden;
+    margin-bottom: 10px; 
+    display: flex;
+    flex-direction: column;
+    flex-grow: unset;
+}
+
+.widget-upload label{ 
+    float: left;
+}
+
+.widget-upload .upload {
+    clear: both;
+    margin: 0.5rem 0;
+}
+
+.widget-upload span.button{
+    list-style: none;
+    min-width: 100px;
+    min-height: 75px;
+    float: left;
+    margin: 5px 10px 5px 0;
+    padding: 0;
+    background: #eee;
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+}

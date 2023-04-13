@@ -1,0 +1,39 @@
+<?php
+
+use Contao\StringUtil;
+?>
+
+<div class="selector_container <?php if ($this->filesNoGallery) : ?>noGalleryCE<?php endif; ?>">
+    <p class="hint">You can upload <span id="fqouta"> <?= $this->uploadAllowCount ?></span> files here. (max <?= $this->maxAllowedFileCount ?> files) </p>
+    <a href="/file_selection?path=<?= $this->folderPathStringUuid ?>" class="uploadBtn ajax">Upload file to this location</a>
+
+    <div class="mmfiles" data-file_maxqouta="<?= $this->maxAllowedFileCount ?>" data-file_qouta="<?= $this->uploadAllowCount ?>" id="<?= $this->strField ?>">
+        <?php if ($this->currentCount > 1) : ?>
+            <p class="sort_hint">Please drag to order selected files</p>
+        <?php endif; ?>
+
+        <ul class="sortable" id="<?= $this->strField ?>__sort">
+            <?php
+
+            $sortOrder = '';
+            foreach ($this->arrFilesPool ?? [] as $k => $v) : ?>
+                <?php
+                if (strlen($v) < 3) {
+                    continue;
+                }
+                $uuid = StringUtil::binToUuid($k);
+                $sortOrder .= $uuid . ',';
+                ?>
+
+                <li data-id="<?= $uuid ?>"><?= $v ?><button type="button" class="delete">×</button></li>
+            <?php endforeach; ?>
+        </ul>
+
+        <input type="hidden" name="<?= $this->strField ?>" id="ctrl_<?= $this->strField ?>__sort" value="<?= $sortOrder ?>">
+    </div>
+    <script>
+        $(document).ready(function() {
+            makeSortable("<?= $this->strField ?>");
+        });
+    </script>
+</div>

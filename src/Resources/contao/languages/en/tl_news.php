@@ -14,12 +14,17 @@ $GLOBALS['TL_LANG']['tl_news']['firstname'] = ['First name', 'First name of pers
 $GLOBALS['TL_LANG']['tl_news']['lastname'] = ['Last name', 'First name of person who created this News'];
 $GLOBALS['TL_LANG']['tl_news']['company'] = ['Company/Organization', 'Company of person who created this News'];
 $GLOBALS['TL_LANG']['tl_news']['singleSRC'] = ['Teaser Image', 'Please select image file'];
+$GLOBALS['TL_LANG']['tl_news']['phone'] = ['Phone', 'Phone'];
+$GLOBALS['TL_LANG']['tl_news']['location'] = ['Location', 'Location'];
 
-
-
-foreach (range(1, $GLOBALS['BS_newsSubmit']['DETAIL_CE_TEXT_FIELD']) as $key) {
-    $GLOBALS['TL_LANG']['tl_news']['detailCE' . $key] = ['Add detail news textarea-' . $key, 'Add detail input textarea'];
+if (isset($GLOBALS['bs_NewsSubmit']['DETAIL_CE_TEXT_FIELD'])) {
+    foreach (range(1, $GLOBALS['bs_NewsSubmit']['DETAIL_CE_TEXT_FIELD']) as $key) {
+        $GLOBALS['TL_LANG']['tl_news']['detailCE_' . $key] = ['Add news details, Textarea-' . $key, 'Add detail input textarea'];
+    }
 }
+
+$GLOBALS['TL_LANG']['tl_news']['image_gallery'] = ['Image Gallery', 'Add additional images'];
+
 /**
  * Legend
  */

@@ -3,7 +3,6 @@
 use Contao\System;
 use Contao\Controller;
 
-
 // Fields
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['bsNewsSubmitEditable'] = [
@@ -17,8 +16,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['bsNewsSubmitEditable'] = [
         Controller::loadDataContainer('tl_news');
 
         foreach ($GLOBALS['TL_DCA']['tl_news']['fields'] as $k => $v) {
-            if ($v['eval']['feEditable']) {
-                if (strlen($GLOBALS['TL_DCA']['tl_news']['fields'][$k]['label'][0]) > 0) {
+            if (isset($v['eval']['feEditable']) && $v['eval']['feEditable']) {
+                if (strlen($GLOBALS['TL_DCA']['tl_news']['fields'][$k]['label'][0] ?? '') > 0) {
                     $return[$k] = $GLOBALS['TL_DCA']['tl_news']['fields'][$k]['label'][0];
                 } else {
                     $return[$k] = $k;
@@ -50,12 +49,20 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['bsUploadDir'] = [
     'sql'                     => "binary(16) NULL"
 ];
 
+//This field may have been already added from BSModule
+$GLOBALS['TL_DCA']['tl_module']['fields']['bs_checkbox'] = array(
+    'exclude'                 => true,
+    'inputType'               => 'checkbox',
+    'eval'                    => array('tl_class' => 'w50'),
+    'sql'                     => "char(1) NOT NULL default ''"
+);
+
 
 /**
  * Add fields to the pallette
  */
 $GLOBALS['TL_DCA']['tl_module']['palettes']['bs_NewsSubmit'] = '{title_legend},name,headline,type;
-                                                                {config_legend},bsNewsSubmitArchive,bsNewsSubmitEditable,disableCaptcha; 
+                                                                {config_legend},bsNewsSubmitArchive,bsNewsSubmitEditable,disableCaptcha,bsUploadDir,bs_checkbox; 
                                                                 {notification_legend},nc_notification;                                                               
                                                                 {redirect_legend},jumpTo;{template_legend:hide},tableless;
                                                                 {protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
@@ -63,4 +70,4 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['bs_NewsSubmit'] = '{title_legend},n
 /**
  * Notification choices
  */
-$GLOBALS['TL_DCA']['tl_module']['fields']['nc_notification']['eval']['ncNotificationChoices']['bs_newssubmit'] = ['bs_newssubmit'];
+$GLOBALS['TL_DCA']['tl_module']['fields']['nc_notification']['eval']['ncNotificationChoices']['bs_NewsSubmit'] = ['bs_NewsSubmit'];

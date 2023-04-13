@@ -1,0 +1,181 @@
+
+.widget-upload {
+    background: #eee;
+    padding: 5px;
+    min-height: 30px;
+    overflow: hidden;
+    margin-bottom: 10px; 
+    display: flex;
+    flex-direction: column;
+    flex-grow: unset;
+}
+
+.widget-upload label{ 
+    float: left;
+}
+
+.widget-upload .upload {
+    clear: both;
+    margin: 0.5rem 0;
+}
+
+.file_selector {
+    padding: 0 10px 10px;
+    border: 1px solid #ccc;
+    margin: 20px 0;
+    position: relative;
+}
+
+.selector_container .mmfiles {
+    background: #ccc;
+    padding: 0 5px 5px;
+    min-height: 30px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.selector_container .mmfiles .sort_hint {
+    display: block;
+    color: #de601a;
+    margin: 3px 0;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.selector_container ul {
+    margin: 10px 0;
+    padding: 0;
+}
+
+.widget-upload span.button,
+.selector_container ul li{
+    list-style: none;
+    min-width: 100px;
+    min-height: 75px;
+    float: left;
+    margin: 5px 10px 5px 0;
+    padding: 0;
+    background: #eee;
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+}
+
+
+.widget-upload span.button {
+    max-width: 180px;
+    background: #dededa;
+}
+
+ul.sortable li {
+    cursor: move;
+}
+
+.selector_container ul li {
+    max-width: 200px;
+}
+
+.widget-upload button,
+.selector_container ul button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    background: rgb(196, 195, 195);
+    margin: 0;
+    padding: 2px;
+    font-size: 16px;
+    line-height: 9px;
+    min-height: 16px;
+    cursor: pointer;
+    color: rgb(95, 94, 94);
+    transition: all .1s linear;
+}
+
+.selector_container ul .filename{
+    word-break: break-all;
+    padding: 0 2px;
+}
+.selector_container ul .tl_gray{
+    color: #aaa;
+    flex-basis: 100%;
+    text-align: center;
+}
+
+li.selected button.select {
+    color: #ffffff;
+    background: rgb(40, 197, 106);
+}
+
+li.selected button:hover {
+    background: rgb(40, 197, 106);
+}
+
+.widget-upload button.delete,
+.selector_container ul button.delete {
+    right: 0;
+    font-size: 22px;
+    line-height: 9px;
+    color: red;
+}
+
+.selector_container.noGalleryCE .mmfiles{
+    background-color: #ebac8b;
+}
+
+/* fileUpload Colorbox */
+a.uploadBtn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    padding: 5px 20px 5px 5px;
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    background: #696937;
+    padding: 0.25rem 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+a.disabled.uploadBtn {
+    color: #fff !important;
+    background: #eee;
+}
+
+.fileUpload{}
+
+#cboxOverlay.fileUpload{
+    opacity: 0.35;
+    background: #eee;
+}
+
+.fileUpload #cboxLoadedContent {
+    border-color: #de601a;
+    padding: 10px;
+}
+
+.fileUpload #cboxLoadedContent .tl_confirm {
+    display: none;
+}
+
+.fileUpload #cboxLoadedContent .info{
+    color: #de601a;
+    font-size: 26px;
+    text-align: center;
+}
+
+/* dropzone */
+.dz-success-mark {
+    background: #696937;
+    border-radius: 26px;
+}
+
+.dz-error-mark {
+    background: red;
+    border-radius: 26px;
+}

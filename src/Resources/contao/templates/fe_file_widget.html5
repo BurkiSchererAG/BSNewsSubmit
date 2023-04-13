@@ -1,0 +1,8 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+<?php
+//Here comes the content from template bs_file_widget  
+?>
+<?= $this->generateWithError(true) ?>
+<?php $this->endblock(); ?>

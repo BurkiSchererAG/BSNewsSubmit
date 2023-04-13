@@ -7,3 +7,18 @@ services:
 
     BurkiSchererAG\BSNewsSubmit\:
         resource: ../../../src/{Controller,EventListener}
+
+
+    BurkiSchererAG\BSNewsSubmit\Controller\:
+        resource: ../../../src/Controller
+        public: true
+        tags: ['controller.service_arguments']        
+
+    BurkiSchererAG\BSNewsSubmit\Controller\FrontendModule\NewsSubmitController:
+        tags:
+            - { name: contao.frontend_module, type: bs_NewsSubmit, category: bs, template: mod_bs_submitnews}
+
+    BurkiSchererAG\BSNewsSubmit\Controller\AttributeFilesController:
+        arguments:
+        - '@contao.framework'
+        - "@request_stack"

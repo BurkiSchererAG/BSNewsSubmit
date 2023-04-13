@@ -1,0 +1,3 @@
+bsnewssubmit.controller:
+    resource: ../../../src/Controller
+    type: annotation
