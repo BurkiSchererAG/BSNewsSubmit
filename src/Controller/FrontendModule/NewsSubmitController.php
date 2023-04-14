@@ -261,11 +261,12 @@ class NewsSubmitController extends AbstractFrontendModuleController
             $objWidget->storeValues = true;
             $objWidget->name = $field;
 
+
             //Default value
             $objWidget->value = $varValue;
 
             if ($this->arrNewsContentElement && in_array($field, $this->allowedCeText) && $this->arrNewsContentElement[$field]) {
-                $objWidget->value = $this->arrNewsContentElement[$field]->row()['text'] ?? 'dedlflfl';
+                $objWidget->value = $this->arrNewsContentElement[$field]->row()['text'] ?? '';
             }
 
             $objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
@@ -290,7 +291,12 @@ class NewsSubmitController extends AbstractFrontendModuleController
 
                 $objWidget->validate();
 
-                $varValue = $objWidget->value;
+                //teaser html is encoded
+                if (($arrData['eval']['rte'] ?? null)  == 'tinyMCE') {
+                    $varValue = StringUtil::decodeEntities($objWidget->value);
+                } else {
+                    $varValue = $objWidget->value;
+                }
 
                 $rgxp = $arrData['eval']['rgxp'] ?? '';
 
@@ -587,8 +593,10 @@ class NewsSubmitController extends AbstractFrontendModuleController
         //Store relevant info in Session, which can be use for varification in ajax call
         $session->set('newsId', $this->newsModel->id);
         $session->set('uploadFolder', $this->newsModel->uploadDir);
-        $session->set('userId', $this->user->id);
-        $session->set('email', $email ?? $this->user->email);
+        if ($this->user !== null) {
+            $session->set('userId', $this->user->id);
+            $session->set('email', $email ?? $this->user->email);
+        }
 
         //Get the new's content elements
         $contentModel = ContentModel::findBy(array("tl_content.pid=? AND tl_content.invisible=''", "tl_content.ptable=?"), array($newsModel->id, 'tl_news'), ['order' => 'sorting']);

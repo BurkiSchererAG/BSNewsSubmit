@@ -94,35 +94,39 @@ class FileWidget extends Widget
         $request = System::getContainer()->get("request_stack");
         $session = $request->getSession();
 
-        $CE_GalleryId = $session->get('CE_GalleryId', null);
-        $CE_GalleryModel = ContentModel::findById($CE_GalleryId);
-
-        $orderSrcArr = StringUtil::deserialize($CE_GalleryModel->orderSRC);
-
-        //Sort arrFiles if there are more than one
-        if (is_array($orderSrcArr) && count($orderSrcArr) > 1) {
-            $arrFilesPool = array_replace(array_flip($orderSrcArr), $arrAllFilesInPool);
-        } else {
-            $arrFilesPool = $arrAllFilesInPool;
-        }
-
-        $sortOrder = '';
-
-        $maxAllowedFileCount = $GLOBALS['bs_NewsSubmit']['maxAllowedFileCount'];
-
-        $currentCount = count($arrFilesPool);
-
-        $uploadAllowCount = $maxAllowedFileCount - count($arrFilesPool);
-
         $objTemplate = new FrontendTemplate('bs_file_widget');
-        $objTemplate->maxAllowedFileCount = $maxAllowedFileCount;
-        $objTemplate->currentCount = $currentCount;
-        $objTemplate->uploadAllowCount = $uploadAllowCount;
-        $objTemplate->sortOrder = $sortOrder;
         $objTemplate->folderPathStringUuid = $this->folderPathStringUuid;
-        $objTemplate->strField = $this->strField;
-        $objTemplate->maxAllowedFileCount = $maxAllowedFileCount;
-        $objTemplate->arrFilesPool = $arrFilesPool;
+
+        $CE_GalleryId = $session->get('CE_GalleryId', null);
+
+        if ($CE_GalleryId != null) {
+            $CE_GalleryModel = ContentModel::findById($CE_GalleryId);
+
+            $orderSrcArr = StringUtil::deserialize($CE_GalleryModel->orderSRC);
+
+            //Sort arrFiles if there are more than one
+            if (is_array($orderSrcArr) && count($orderSrcArr) > 1) {
+                $arrFilesPool = array_replace(array_flip($orderSrcArr), $arrAllFilesInPool);
+            } else {
+                $arrFilesPool = $arrAllFilesInPool;
+            }
+
+            $sortOrder = '';
+
+            $maxAllowedFileCount = $GLOBALS['bs_NewsSubmit']['maxAllowedFileCount'];
+
+            $currentCount = count($arrFilesPool);
+
+            $uploadAllowCount = $maxAllowedFileCount - count($arrFilesPool);
+
+            $objTemplate->maxAllowedFileCount = $maxAllowedFileCount;
+            $objTemplate->currentCount = $currentCount;
+            $objTemplate->uploadAllowCount = $uploadAllowCount;
+            $objTemplate->sortOrder = $sortOrder;
+            $objTemplate->strField = $this->strField;
+            $objTemplate->maxAllowedFileCount = $maxAllowedFileCount;
+            $objTemplate->arrFilesPool = $arrFilesPool;
+        }
 
         //If there are gallery files in folder but no gallery element, then mark it 
         if (count($arrAllFilesInPool) && $CE_GalleryId == null) {
