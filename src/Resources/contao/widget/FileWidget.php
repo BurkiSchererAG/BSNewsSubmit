@@ -96,6 +96,10 @@ class FileWidget extends Widget
 
         $objTemplate = new FrontendTemplate('bs_file_widget');
         $objTemplate->folderPathStringUuid = $this->folderPathStringUuid;
+        $objTemplate->currentCount = 0;
+
+        $maxAllowedFileCount = $GLOBALS['bs_NewsSubmit']['maxAllowedFileCount'];
+        $objTemplate->maxAllowedFileCount = $maxAllowedFileCount;
 
         $CE_GalleryId = $session->get('CE_GalleryId', null);
 
@@ -113,20 +117,18 @@ class FileWidget extends Widget
 
             $sortOrder = '';
 
-            $maxAllowedFileCount = $GLOBALS['bs_NewsSubmit']['maxAllowedFileCount'];
 
             $currentCount = count($arrFilesPool);
 
             $uploadAllowCount = $maxAllowedFileCount - count($arrFilesPool);
 
-            $objTemplate->maxAllowedFileCount = $maxAllowedFileCount;
             $objTemplate->currentCount = $currentCount;
             $objTemplate->uploadAllowCount = $uploadAllowCount;
             $objTemplate->sortOrder = $sortOrder;
-            $objTemplate->strField = $this->strField;
-            $objTemplate->maxAllowedFileCount = $maxAllowedFileCount;
             $objTemplate->arrFilesPool = $arrFilesPool;
         }
+
+        $objTemplate->strField = $this->strField;
 
         //If there are gallery files in folder but no gallery element, then mark it 
         if (count($arrAllFilesInPool) && $CE_GalleryId == null) {

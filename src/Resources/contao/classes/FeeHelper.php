@@ -24,7 +24,7 @@ class FeeHelper
         $CE_galleryModel->tstamp  = time();
         $CE_galleryModel->sorting  = 1000 * $GLOBALS['bs_NewsSubmit']['DETAIL_CE_TEXT_FIELD'];
         $CE_galleryModel->type = 'gallery';
-        $CE_galleryModel->multiSRC = $galleryFolderModel->uuid;
+        $CE_galleryModel->multiSRC = serialize([$galleryFolderModel->uuid]);
 
         $CE_galleryModel->save();
 

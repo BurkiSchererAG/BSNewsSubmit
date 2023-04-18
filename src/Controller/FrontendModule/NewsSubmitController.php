@@ -516,6 +516,8 @@ class NewsSubmitController extends AbstractFrontendModuleController
                         $ce_text['text'] = $element;
                         // $this->connection->prepare("INSERT INTO tl_content %s")->set($ce_text)->execute();
                         $this->connection->insert('tl_content', $ce_text);
+
+                        //NOTE IMAGE GALLERY is created from FeeHelper::createGalleryCE(), via class FileWidget
                     } else {
                         //Update existing CE.
                         $this->arrNewsContentElement[$nameKey]->text = $element;
@@ -622,7 +624,7 @@ class NewsSubmitController extends AbstractFrontendModuleController
 
                 $currrentContent = $contentModel->current();
 
-                //Check if there is text elment and its editable
+                //Check if there is text elment and it is editable
                 if (count($this->allowedCeText) && $currrentContent->type == 'text' && $i < count($this->allowedCeText)) {
                     $this->arrNewsContentElement[$this->allowedCeText[$i]] = $contentModel->current();
                     $i++;
@@ -652,10 +654,9 @@ class NewsSubmitController extends AbstractFrontendModuleController
         }
 
         $uploadDir = $basePath;
-        $uploadDirModel = FilesModel::findById($this->newsModel->uploadDir);
 
-
-        if ($uploadDirModel !== null) {
+        if ($this->newsModel !== null) {
+            $uploadDirModel = FilesModel::findById($this->newsModel->uploadDir);
             $uploadDir = $uploadDirModel->row()['path'];
         }
 
@@ -728,7 +729,6 @@ class NewsSubmitController extends AbstractFrontendModuleController
         $CE_GalleryId = $session->get('CE_GalleryId', null);
 
         $CE_GalleryModel = ContentModel::findById($CE_GalleryId);
-
         $sortingArr = explode(',', Input::post($field));
 
         //don't do anything if there is no gallery or with only 1 image
@@ -745,6 +745,7 @@ class NewsSubmitController extends AbstractFrontendModuleController
         }
 
         $orderSRC = serialize($orderSrcArr);
+        $CE_GalleryModel->sortBy = 'custom';
         $CE_GalleryModel->orderSRC = $orderSRC;
         $CE_GalleryModel->save();
     }

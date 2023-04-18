@@ -158,7 +158,6 @@ class AttributeFilesController extends AbstractController
                 Dbafs::addResource($strFile);
             }
 
-
             $CE_gallery = $this->makeGalleryElement();
             return new Response($CE_gallery);
         }
